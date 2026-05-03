@@ -431,12 +431,32 @@ function updateLoop() {
 		sum += v * v;
 	}
 	const rms = Math.sqrt(sum / data.length);
-	const sens = parseFloat(dom.micSens.value);
-	let vol = Math.min(1.0, rms * sens);
+	// 1. マイクの生入力を0.0〜1.0の範囲に正規化（* 5.0 は環境に合わせて調整可能）
+	let inputLevel = Math.min(1.0, rms * 5.0);
+
+	// 2. 設定された感度(0〜100)から「しきい値(0.0〜1.0)」を計算
+	const sensPercent = parseFloat(dom.micSens.value);
+	const threshold = 1.0 - sensPercent / 100;
+
+	// 3. 計算ロジック（しきい値以下は0、しきい値〜1.0を 0.0〜1.0 に引き伸ばす）
+	let vol = 0;
+	if (inputLevel >= threshold && threshold < 1.0) {
+		vol = (inputLevel - threshold) / (1.0 - threshold);
+	} else if (threshold === 0) {
+		vol = inputLevel; // 100%のときはそのまま
+	}
+
+	// ノイズカットの微調整（完全にゼロにならない微細なノイズを消す）
 	if (vol < 0.05) vol = 0;
 
-	let currentVol = vol * 0.8;
+	// 4. タッチモードの音量設定（マスターボリューム）を適用
+	const masterVol = parseFloat(dom.simpleVol.value) / 100;
+	let currentVol = vol * masterVol * 0.8; // 0.8は元の基礎音量バランス
+
+	// エンジンごとの音量バランス調整
 	if (currentEngine === 'real') currentVol *= 0.6;
+	else if (currentEngine === 'old-real') currentVol *= 0.8;
+
 	gainNode.gain.setTargetAtTime(currentVol, audioCtx.currentTime, 0.04);
 
 	let targetCutoff;
