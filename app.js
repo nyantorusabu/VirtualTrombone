@@ -423,41 +423,56 @@ function updateLoop() {
 
 	if (inputMode === 'touch' || !isMicInitialized) return;
 
-	const data = new Uint8Array(analyser.frequencyBinCount);
-	analyser.getByteTimeDomainData(data);
-	let sum = 0;
+	const bufferLength = analyser.fftSize; // frequencyBinCount ではなく fftSize を使用
+	const data = new Float32Array(bufferLength);
+
+	analyser.getFloatTimeDomainData(data); // 高精度Float版に変更
+
+	let sum = 0.0;
 	for (let i = 0; i < data.length; i++) {
-		const v = (data[i] - 128) / 128;
+		const v = data[i]; // すでに -1.0〜1.0 の範囲
 		sum += v * v;
 	}
+
 	const rms = Math.sqrt(sum / data.length);
-	// 1. マイクの生入力を0.0〜1.0の範囲に正規化（* 5.0 は環境に合わせて調整可能）
+
+	// 1. 生入力の正規化
 	let inputLevel = Math.min(1.0, rms * 5.0);
 
-	// 2. 設定された感度(0〜100)から「しきい値(0.0〜1.0)」を計算
+	// 2. 感度設定からしきい値計算
 	const sensPercent = parseFloat(dom.micSens.value);
 	const threshold = 1.0 - sensPercent / 100;
 
-	// 3. 計算ロジック（しきい値以下は0、しきい値〜1.0を 0.0〜1.0 に引き伸ばす）
-	let vol = 0;
-	if (inputLevel >= threshold && threshold < 1.0) {
+	// 3. しきい値適用ロジック
+	let vol = 0.0;
+	if (threshold >= 1.0) {
+		vol = 0.0; // 感度0%時は常に0
+	} else if (inputLevel >= threshold) {
 		vol = (inputLevel - threshold) / (1.0 - threshold);
-	} else if (threshold === 0) {
-		vol = inputLevel; // 100%のときはそのまま
+	} else {
+		vol = 0.0;
 	}
 
-	// ノイズカットの微調整（完全にゼロにならない微細なノイズを消す）
-	if (vol < 0.05) vol = 0;
+	// ノイズカット
+	if (vol < 0.05) vol = 0.0;
 
-	// 4. タッチモードの音量設定（マスターボリューム）を適用
+	// 4. マスターボリューム適用
 	const masterVol = parseFloat(dom.simpleVol.value) / 100;
-	let currentVol = vol * masterVol * 0.8; // 0.8は元の基礎音量バランス
+	let currentVol = vol * masterVol * 0.82;
 
-	// エンジンごとの音量バランス調整
-	if (currentEngine === 'real') currentVol *= 0.6;
-	else if (currentEngine === 'old-real') currentVol *= 0.8;
+	// エンジン別バランス調整
+	if (currentEngine === 'real') {
+		currentVol *= 0.62;
+	} else if (currentEngine === 'old-real') {
+		currentVol *= 0.82;
+	}
 
-	gainNode.gain.setTargetAtTime(currentVol, audioCtx.currentTime, 0.04);
+	// 5. gainNode適用
+	gainNode.gain.setTargetAtTime(
+		Math.min(1.0, currentVol),
+		audioCtx.currentTime,
+		0.03,
+	);
 
 	let targetCutoff;
 	if (currentEngine === 'real') {
