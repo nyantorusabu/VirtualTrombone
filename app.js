@@ -326,7 +326,6 @@ function initSystem(e) {
 	dom.startOverlay.style.display = 'none';
 	requestAnimationFrame(updateLoop);
 	handleResize();
-	handleInput(e);
 }
 
 async function setupMicrophone(deviceId = null) {
