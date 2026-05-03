@@ -1,169 +1,262 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>VirtualTrombone</title>
-  
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2c2c2c">
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="favicon.png">
-  
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title>VirtualTrombone</title>
 
-  <div id="start-overlay"><div class="pulse-text">画面をタップして開始</div></div>
+		<link rel="manifest" href="manifest.json" />
+		<meta name="theme-color" content="#2c2c2c" />
+		<link rel="icon" href="favicon.png" type="image/png" />
+		<link rel="apple-touch-icon" href="favicon.png" />
 
-  <div id="play-screen">
-    <button id="open-settings-btn">⚙️</button>
-    <button id="record-btn"></button>
-    <div id="lip-zone"></div>
-    
-    <div id="guides-container">
-      <div id="harmonic-guides"></div>
-      <div id="pos-guides"></div>
-    </div>
-    
-    <div id="status-bar">
-      <span id="status-note">音階: -</span>
-      <div>
-        <span id="status-mode">モード: シンプル</span>
-        <span id="status-engine">リアル</span>
-      </div>
-    </div>
-  </div>
+		<link rel="stylesheet" href="styles.css" />
+	</head>
+	<body>
+		<div id="start-overlay">
+			<div class="pulse-text">画面をタップして開始</div>
+		</div>
 
-  <div id="settings-overlay" class="overlay">
-    <div class="modal-box">
-<div class="tabs">
-  <button class="tab-btn active" data-target="tab-general">基本設定</button>
-  <button class="tab-btn" data-target="tab-control">操作設定</button>
-  <button class="tab-btn" data-target="tab-app">アプリ設定</button> </div>
+		<div id="play-screen">
+			<button id="open-settings-btn">⚙️</button>
+			<button id="record-btn"></button>
+			<div id="lip-zone"></div>
 
-<div class="tab-content">
-  <div id="tab-app" class="tab-pane">
-    <div class="setting-group">
-      <label>アプリの更新</label>
-      <button id="update-app-btn" class="btn btn-secondary">最新の状態に更新</button>
-    </div>
+			<div id="guides-container">
+				<div id="harmonic-guides"></div>
+				<div id="pos-guides"></div>
+			</div>
 
-    <div class="setting-group">
-      <label>ソースコード</label>
-      <a href="https://github.com/nyantorusabu/VirtualTrombone" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="text-decoration: none; display: block; text-align: center; line-height: 1.4;">Github</a>
-    </div>
-    </div>
-        <div id="tab-general" class="tab-pane active">
-          
-          <div class="setting-group">
-            <label>オーディオエンジン</label>
-            <select id="engine-select">
-              <option value="real">リアル</option>
-              <option value="old-real">旧リアル</option>
-              <option value="simple">シンプル</option>
-            </select>
-          </div>
+			<div id="status-bar">
+				<span id="status-note">音階: -</span>
+				<div>
+					<span id="status-mode">モード: タッチ</span>
+					<span id="status-engine">リアル</span>
+				</div>
+			</div>
+		</div>
 
-          <div class="setting-group">
-            <label>演奏モード</label>
-            <select id="mode-select">
-              <option value="touch">シンプル</option>
-              <option value="mic">マイク</option>
-            </select>
-          </div>
-          
-          <div class="setting-group" id="simple-vol-wrapper">
-            <label>シンプルモードの音量: <span id="val-simple-vol">50</span>%</label>
-            <input type="range" id="simple-vol" min="0" max="100" step="5" value="50">
-          </div>
+		<div id="settings-overlay" class="overlay">
+			<div class="modal-box">
+				<div class="tabs">
+					<button class="tab-btn active" data-target="tab-general">
+						基本設定
+					</button>
+					<button class="tab-btn" data-target="tab-control">
+						操作設定
+					</button>
+					<button class="tab-btn" data-target="tab-app">
+						アプリ設定
+					</button>
+				</div>
 
-          <div class="setting-group">
-            <label>録音の操作</label>
-            <select id="record-trigger-select">
-              <option value="double">ダブルタップ</option>
-              <option value="single">シングルタップ</option>
-            </select>
-          </div>
+				<div class="tab-content">
+					<div id="tab-app" class="tab-pane">
+						<div class="setting-group">
+							<label>アプリの更新</label>
+							<button
+								id="update-app-btn"
+								class="btn btn-secondary"
+							>
+								最新の状態に更新
+							</button>
+						</div>
 
-          <div class="setting-group" id="vibration-wrapper">
-            <label>バイブレーション</label>
-            <select id="vibration-select">
-              <option value="on">有効</option>
-              <option value="off">無効</option>
-            </select>
-          </div>
+						<div class="setting-group">
+							<label>ソースコード</label>
+							<a
+								href="https://github.com/nyantorusabu/VirtualTrombone"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="btn btn-secondary"
+								style="
+									text-decoration: none;
+									display: block;
+									text-align: center;
+									line-height: 1.4;
+								"
+								>Github</a
+							>
+						</div>
+					</div>
+					<div id="tab-general" class="tab-pane active">
+						<div class="setting-group">
+							<label>オーディオエンジン</label>
+							<select id="engine-select">
+								<option value="real">リアル</option>
+								<option value="old-real">旧リアル</option>
+								<option value="simple">シンプル</option>
+							</select>
+						</div>
 
-          <div class="setting-group" id="touch-pressure-wrapper">
-            <label>タッチの強さで音量を変化</label>
-            <select id="touch-pressure-select">
-              <option value="off">無効</option>
-              <option value="on">有効</option>
-            </select>
-          </div>
-          
-          <div id="mic-settings-wrapper" class="sub-settings" style="opacity: 0.3; pointer-events: none;">
-            <label style="color:#aaa; font-size:11px; margin-bottom:10px;">マイクモード専用設定</label>
-            <div class="setting-group">
-              <label>マイク選択</label>
-              <select id="mic-select"><option>デフォルト</option></select>
-            </div>
-            <div class="setting-group">
-              <label>息の感度: <span id="val-mic-sens">5.0</span></label>
-              <input type="range" id="mic-sens" min="1" max="20" step="0.5" value="5.0">
-            </div>
-          </div>
-        </div>
+						<div class="setting-group">
+							<label>演奏モード</label>
+							<select id="mode-select">
+								<option value="touch">タッチ</option>
+								<option value="mic">マイク</option>
+							</select>
+						</div>
 
-        <div id="tab-control" class="tab-pane">
-          <div class="setting-group">
-            <label>スライドの間隔</label>
-            <select id="slide-mode-select">
-              <option value="fixed">固定幅</option>
-              <option value="realistic">リアル</option>
-            </select>
-          </div>
-          
-          <div class="setting-group" style="margin-top: 30px; border-top: 1px solid #444; padding-top: 15px;">
-            <label>リップ操作モード</label>
-            <select id="lip-mode-select">
-              <option value="standard">スタンダード</option>
-              <option value="pro">プロ</option>
-            </select>
-          </div>
+						<div class="setting-group" id="simple-vol-wrapper">
+							<label
+								>タッチモードの音量:
+								<span id="val-simple-vol">50</span>%</label
+							>
+							<input
+								type="range"
+								id="simple-vol"
+								min="0"
+								max="100"
+								step="5"
+								value="50"
+							/>
+						</div>
 
-          <div id="pro-settings-wrapper" class="sub-settings" style="opacity: 0.3; pointer-events: none;">
-            <label style="color:#aaa; font-size:11px; margin-bottom:10px;">プロモード専用設定</label>
-            <div class="setting-group">
-              <label>高さで音量を調整</label>
-              <select id="y-vol-select">
-                <option value="off">無効</option>
-                <option value="on">有効</option>
-              </select>
-            </div>
-            <div class="setting-group">
-              <label>リップスワイプの方向</label>
-              <select id="lip-dir-select">
-                <option value="normal">上に動かすと高音</option>
-                <option value="invert">下に動かすと高音</option>
-              </select>
-            </div>
-            <div class="setting-group">
-              <label>リップ感度: <span id="val-lip-sens">1.0</span></label>
-              <input type="range" id="lip-sens" min="0.5" max="3.0" step="0.1" value="1.0">
-            </div>
-          </div>
+						<div class="setting-group">
+							<label>録音の操作</label>
+							<select id="record-trigger-select">
+								<option value="double">ダブルタップ</option>
+								<option value="single">シングルタップ</option>
+							</select>
+						</div>
 
-        </div>
-      </div>
+						<div class="setting-group" id="vibration-wrapper">
+							<label>バイブレーション</label>
+							<select id="vibration-select">
+								<option value="on">有効</option>
+								<option value="off">無効</option>
+							</select>
+						</div>
 
-      <div class="modal-footer">
-        <button id="fullscreen-btn" class="btn btn-secondary">フルスクリーン</button>
-        <button id="close-settings-btn" class="btn">閉じる</button>
-      </div>
-    </div>
-  </div>
+						<div class="setting-group" id="touch-pressure-wrapper">
+							<label>タッチの強さで音量を変化</label>
+							<select id="touch-pressure-select">
+								<option value="off">無効</option>
+								<option value="on">有効</option>
+							</select>
+						</div>
 
-  <script src="app.js"></script>
-</body>
+						<div
+							id="mic-settings-wrapper"
+							class="sub-settings"
+							style="opacity: 0.3; pointer-events: none"
+						>
+							<label
+								style="
+									color: #aaa;
+									font-size: 11px;
+									margin-bottom: 10px;
+								"
+								>マイクモード専用設定</label
+							>
+							<div class="setting-group">
+								<label>マイク選択</label>
+								<select id="mic-select">
+									<option>デフォルト</option>
+								</select>
+							</div>
+							<div class="setting-group">
+								<label
+									>息の感度:
+									<span id="val-mic-sens">5.0</span></label
+								>
+								<input
+									type="range"
+									id="mic-sens"
+									min="1"
+									max="20"
+									step="0.5"
+									value="5.0"
+								/>
+							</div>
+						</div>
+					</div>
+
+					<div id="tab-control" class="tab-pane">
+						<div class="setting-group">
+							<label>スライドの間隔</label>
+							<select id="slide-mode-select">
+								<option value="fixed">固定幅</option>
+								<option value="realistic">リアル</option>
+							</select>
+						</div>
+
+						<div
+							class="setting-group"
+							style="
+								margin-top: 30px;
+								border-top: 1px solid #444;
+								padding-top: 15px;
+							"
+						>
+							<label>リップ操作モード</label>
+							<select id="lip-mode-select">
+								<option value="standard">スタンダード</option>
+								<option value="pro">プロ</option>
+							</select>
+						</div>
+
+						<div
+							id="pro-settings-wrapper"
+							class="sub-settings"
+							style="opacity: 0.3; pointer-events: none"
+						>
+							<label
+								style="
+									color: #aaa;
+									font-size: 11px;
+									margin-bottom: 10px;
+								"
+								>プロモード専用設定</label
+							>
+							<div class="setting-group">
+								<label>高さで音量を調整</label>
+								<select id="y-vol-select">
+									<option value="off">無効</option>
+									<option value="on">有効</option>
+								</select>
+							</div>
+							<div class="setting-group">
+								<label>リップスワイプの方向</label>
+								<select id="lip-dir-select">
+									<option value="normal">
+										上に動かすと高音
+									</option>
+									<option value="invert">
+										下に動かすと高音
+									</option>
+								</select>
+							</div>
+							<div class="setting-group">
+								<label
+									>リップ感度:
+									<span id="val-lip-sens">1.0</span></label
+								>
+								<input
+									type="range"
+									id="lip-sens"
+									min="0.5"
+									max="3.0"
+									step="0.1"
+									value="1.0"
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button id="fullscreen-btn" class="btn btn-secondary">
+						フルスクリーン
+					</button>
+					<button id="close-settings-btn" class="btn">閉じる</button>
+				</div>
+			</div>
+		</div>
+
+		<script src="app.js"></script>
+	</body>
 </html>
