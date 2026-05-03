@@ -631,6 +631,8 @@ function updateUIStates() {
 		dom.lipZone.style.width = 'calc(100% / 7)';
 		dom.guidesContainer.style.left = 'calc(100% / 7)';
 		dom.guidesContainer.style.width = 'calc(100% * 6 / 7)';
+		dom.proWrapper.style.opacity = '1';
+		dom.proWrapper.style.pointerEvents = 'auto';
 	} else {
 		dom.lipZone.style.display = 'none';
 		dom.guidesContainer.style.left = '0';
